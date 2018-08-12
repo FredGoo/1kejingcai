@@ -1,4 +1,4 @@
 jingcai-env/
 .vscode/
-instance/
+instance/*.py
 *.pyc
