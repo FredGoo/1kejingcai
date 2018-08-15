@@ -1,12 +1,25 @@
-from flask import Flask, Blueprint
-from flask_security import current_user
-from myapp.data.models import db
-from myapp.admin.controllers import admin
+import os
 
-app = Flask(__name__, instance_relative_config=True)
+from flask import Flask
 
-# app.config['DEVELOPMENT']
-app.config.from_pyfile('config.cfg')
-app.register_blueprint(admin, url_prefix='/admin')
 
-db.init_app(app)
+def create_app(test_config=None):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flasker.sqlite')
+    )
+
+    if test_config is None:
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        app.config.from_mapping(test_config)
+
+    @app.route('/hello')
+    def hello():
+        return 'Hello world!'
+
+    from . import db
+    db.init_app(app)
+
+    return app

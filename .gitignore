@@ -2,3 +2,5 @@ jingcai-env/
 .vscode/
 instance/*.py
 *.pyc
+.pytest_cache/
+.coverage
