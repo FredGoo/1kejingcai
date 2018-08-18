@@ -1,6 +1,12 @@
-jingcai-env/
 .vscode/
+
+.idea/
+*.iml
+
+jingcai-env/
 instance/*.py
 *.pyc
 .pytest_cache/
 .coverage
+
+target/
