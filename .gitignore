@@ -10,3 +10,5 @@ instance/*.py
 .coverage
 
 target/
+
+node_modules/

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+
+    <bean id="jingcaiDataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://101.132.170.74:10336/jingcai?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;useSSL=false"/>
+        <property name="username" value="root"/>
+        <property name="password" value="098f6bcd4621d373cade4e832627b4f6"/>
+        <property name="initialSize" value="20"/>
+        <property name="maxIdle" value="30"/>
+        <property name="minIdle" value="5"/>
+        <property name="connectionProperties" value="clientEncoding=utf-8"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+    </bean>
+
+    <bean id="decisionSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="jingcaiDataSource"/>
+        <property name="typeAliasesPackage" value="gyqw.jingcai.domain"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:mapper/*.xml</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="gyqw.jingcai.dao"/>
+        <property name="markerInterface" value="gyqw.jingcai.dao.BaseMapper"/>
+        <property name="properties">
+            <value>
+                mappers=gyqw.jingcai.dao.BaseMapper
+            </value>
+        </property>
+        <property name="sqlSessionFactoryBeanName" value="decisionSqlSessionFactory"/>
+    </bean>
+
+</beans>

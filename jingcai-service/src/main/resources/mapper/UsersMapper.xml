@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="gyqw.jingcai.dao.UsersMapper" >
+  <resultMap id="BaseResultMap" type="gyqw.jingcai.domain.User" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="N_ID" property="nId" jdbcType="INTEGER" />
+    <result column="C_OPEN_ID" property="cOpenId" jdbcType="VARCHAR" />
+    <result column="D_CREATE" property="dCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    N_ID, C_OPEN_ID, D_CREATE
+  </sql>
+</mapper>
