@@ -15,7 +15,7 @@
       <van-cell title="选择送餐方式：">
         <van-radio-group v-model="radio">
           <van-radio name="1">配送</van-radio>
-          <van-radio name="2">自提</van-radio>
+          <van-radio name="2">店内就餐</van-radio>
           <div style="clear: both;"></div>
         </van-radio-group>
       </van-cell>

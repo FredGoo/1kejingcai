@@ -12,3 +12,4 @@ instance/*.py
 target/
 
 node_modules/
+dist/

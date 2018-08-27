@@ -28,6 +28,7 @@
           </div>
           <div>
             <div v-for="(product, index) in cart"
+                 :key="index"
                  style="border:1px solid #bbb;border-radius: 3px;margin-bottom: 8px;background-color: #F0FFFF;">
               <div style="position:absolute;">
                 <div class="van-badge__info"

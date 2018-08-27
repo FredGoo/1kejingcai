@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+@Table(name = "users")
 public class User implements Serializable {
     @Id
     @Column(name = "N_ID")
