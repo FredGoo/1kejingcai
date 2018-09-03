@@ -7,7 +7,7 @@
           style="background-color: #fff;padding: 4px;border-radius: 5px;margin-left: 5px;box-shadow: 0 1px #888888;">
           <div
             style="border-radius: 5px;line-height: 25px;background: linear-gradient(#F0FFFF, #87CEEB);border:1px solid #87CEEB;font-weight: bold;">
-            &yen;&nbsp;{{totalPrice}}
+            &yen;&nbsp;{{(totalPrice / 100).toFixed(2)}}
           </div>
         </div>
       </van-col>
@@ -21,75 +21,93 @@
 
     <!-- body -->
     <van-row class="fd-body">
+
+      <!-- 购物车 -->
       <van-col span="8" class="fd-product-picked">
         <div class="fd-product-col">
           <div class="fd-product-picked-title" style="margin-bottom: 16px;">
             <span>已选菜品</span>
           </div>
           <div>
-            <div v-for="(product, index) in cart"
+            <div v-for="(cartProduct, index) in cart"
                  :key="index"
                  style="border:1px solid #bbb;border-radius: 3px;margin-bottom: 8px;background-color: #F0FFFF;">
               <div style="position:absolute;">
                 <div class="van-badge__info"
-                     style="min-width: 28px;line-height: 28px;border-radius: 14px;font-size: 16px;top: -12px;right: -14px;background-color: #bbb;">
+                     style="min-width: 28px;line-height: 28px;border-radius: 14px;font-size: 16px;top: -12px;right: -14px;background-color: #bbb;"
+                     @click="onProductRemoveClick(index)">
                   X
                 </div>
               </div>
               <div style="border-bottom:1px solid #bbb;font-size: 14px;padding:6px 0;">
-                {{product}}
+                {{cartProduct.cTitle}}
               </div>
               <div style="font-size: 13px;padding:6px 0;">
-                &yen;2.85&nbsp;<span style="font-size: 12px;">*&nbsp;1</span>
+                &yen;{{(cartProduct.nAmount / 100).toFixed(2)}}&nbsp;<span style="font-size: 12px;">*&nbsp;{{cartProduct.pcs}}</span>
               </div>
             </div>
           </div>
         </div>
       </van-col>
+      <!-- ./ 购物车 -->
 
       <van-col span="16" class="fd-product-list">
         <div class="fd-product-col">
 
+          <!-- 分类名称提示 -->
           <van-row class="fd-product-list-title" style="height: 48px;">
             <van-col span="4">
-              <van-icon name="arrow-left" class="fd-product-list-arrow"/>
+              <van-icon name="arrow-left" class="fd-product-list-arrow" @click="turnLeft"/>
             </van-col>
             <van-col span="16">
               <div>
-                {{currentCategory}}
+                {{currentCategory.cTitle}}
               </div>
               <div style="display: flex;justify-content: center;margin-top: 8px;">
-                <i class="van-swipe__indicator van-swipe__indicator--active"/>
-                <i class="van-swipe__indicator"/>
+                <i class="van-swipe__indicator"
+                   v-bind:class="{'van-swipe__indicator--active': index == currentCategory.index}"
+                   v-for="(category, index) in categories"
+                   :key="index"/>
               </div>
             </van-col>
             <van-col span="4">
-              <van-icon name="arrow" class="fd-product-list-arrow"/>
+              <van-icon name="arrow" class="fd-product-list-arrow" @click="turnRight"/>
             </van-col>
           </van-row>
+          <!-- ./ 分类名称提示 -->
 
           <van-row class="fd-product-list-body">
-            <van-swipe :autoplay="0" style="height: 100%;">
-              <van-swipe-item v-for="(category, index) in categorys"
+            <van-swipe :autoplay="0" style="height: 100%;" @change="onSwipeChange" ref="mySwipe">
+
+              <!-- 分类 -->
+              <van-swipe-item v-for="(category, index) in categories"
                               :key="index"
                               :show-indicators="false"
                               style="overflow: scroll;">
+
+                <!-- 分类的产品 -->
                 <div class="fd-product-list-body-page">
                   <div v-for="(product, index) in products"
                        :key="index"
+                       @click="onProductClick(product)"
                        style="width: 50%;float: left;margin:6px 0;">
                     <div style="height: 100%;border: 1px solid #bbb;border-radius: 6px;margin:0 6px;">
-                      <div>{{product}}</div>
+                      <div>{{product.cTitle}}</div>
                       <div>
                         <img
-                          src="https://img.yzcdn.cn/public_files/2017/09/05/c0dab461920687911536621b345a0bc9.jpg"
+                          :src="product.tImageUrl"
                           style="width: 100%;"/>
+                        <div>&yen;{{(product.nAmount / 100).toFixed(2)}}</div>
                       </div>
                     </div>
                   </div>
                   <div style="clear: both;height: 48px;"></div>
                 </div>
+                <!-- ./ 分类的产品 -->
+
               </van-swipe-item>
+              <!-- 分类 -->
+
             </van-swipe>
           </van-row>
 
@@ -105,39 +123,126 @@
     name: 'Index',
     data: function () {
       return {
-        totalPrice: '0.00',
-        currentCategory: '低脂先锋',
-        categorys: [
-          './assets/1.png',
-          './assets/2.png'
-        ],
-        products: [
-          '菜品1',
-          '菜品2',
-          '菜品3',
-          '菜品4',
-          '菜品5',
-          '菜品6',
-          '菜品7',
-          '菜品8',
-          '菜品9',
-          '菜品10',
-          '菜品11',
-          '菜品12'
-        ],
-        cart: [
-          '菜品1',
-          '菜品2'
-        ]
+        totalPrice: 0,
+        currentCategory: {
+          index: 0,
+          nId: 1,
+          cTitle: '',
+          nAmount: 0,
+          tImageUrl: ''
+        },
+        // 类别
+        categories: [],
+        // 产品
+        products: [],
+        // 购物车
+        cart: []
       }
     },
     mounted: function () {
+      this.init()
     },
     methods: {
-      // 获取类别
-      getCategories() {
+      // 初始化
+      init() {
         this.$axios
-          .get('/')
+          .get('/category/listAll')
+          .then(response => {
+            if (response.data.status) {
+              this.categories = response.data.result
+
+              // 初始化类别
+              this.currentCategory = this.categories[0]
+              this.currentCategory.index = 0
+
+              // 获取当前类下的产品
+              this.getProductByCategory(this.currentCategory.nId)
+            }
+          })
+      },
+      // 往左划
+      turnLeft() {
+        let toIndex = this.currentCategory.index - 1
+        if (toIndex < 0) {
+          toIndex = this.categories.length - 1
+        }
+
+        this.$refs.mySwipe.swipeTo(toIndex)
+      },
+      // 往右划
+      turnRight() {
+        let toIndex = this.currentCategory.index + 1
+        if (toIndex > this.categories.length - 1) {
+          toIndex = 0
+        }
+
+        this.$refs.mySwipe.swipeTo(toIndex)
+      },
+      // 监听swipe的change事件
+      onSwipeChange(index) {
+        this.currentCategory = this.categories[index]
+        this.currentCategory.index = index
+
+        this.getProductByCategory(this.currentCategory.nId)
+      },
+      // 根据类别获取产品
+      getProductByCategory(categoryId) {
+        this.$axios
+          .get('/product/getProductByCategoryId', {
+            params: {
+              categoryId: categoryId
+            }
+          })
+          .then(response => {
+            if (response.data.status) {
+              this.products = response.data.result
+            }
+          })
+      },
+      // 添加产品
+      onProductClick(product) {
+        let productAlreadyIn = false
+
+        for (let cartProductIndex in this.cart) {
+          let cartProduct = this.cart[cartProductIndex]
+          if (cartProduct.nId == product.nId) {
+            product.pcs = this.cart[cartProductIndex].pcs + 1
+            this.cart.splice(cartProductIndex, product)
+
+            productAlreadyIn = true
+          }
+        }
+
+        if (!productAlreadyIn) {
+          product.pcs = 1
+          this.cart.push(product)
+        }
+
+        this.calcTotalAmount()
+      },
+      // 删除产品
+      onProductRemoveClick(index) {
+        let product = this.cart[index]
+        let toPcs = product.pcs - 1
+
+        if (toPcs < 1) {
+          this.cart.splice(index, 1)
+        } else {
+          product.pcs = toPcs
+          this.cart.splice(index, product)
+        }
+
+        this.calcTotalAmount()
+      },
+      // 计算金额
+      calcTotalAmount() {
+        let totalPrice = 0
+
+        for (let cartIndex in this.cart) {
+          totalPrice += this.cart[cartIndex].nAmount * this.cart[cartIndex].pcs
+        }
+
+        this.totalPrice = totalPrice
       }
     }
   }
