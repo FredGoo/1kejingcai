@@ -2,12 +2,12 @@ package gyqw.jingcai.model;
 
 import java.io.Serializable;
 
-public class BaseResultModel implements Serializable {
+public class BaseModel implements Serializable {
     private boolean status;
     private Object result;
     private String errorMessage;
 
-    public BaseResultModel() {
+    public BaseModel() {
         this.status = true;
     }
 
@@ -37,7 +37,7 @@ public class BaseResultModel implements Serializable {
 
     @Override
     public String toString() {
-        return "BaseResultModel{" +
+        return "BaseModel{" +
                 "status=" + status +
                 ", result=" + result +
                 ", errorMessage='" + errorMessage + '\'' +

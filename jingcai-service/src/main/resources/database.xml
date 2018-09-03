@@ -20,7 +20,7 @@
         <property name="testWhileIdle" value="true"/>
     </bean>
 
-    <bean id="decisionSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="jingcaiSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="jingcaiDataSource"/>
         <property name="typeAliasesPackage" value="gyqw.jingcai.domain"/>
         <property name="mapperLocations">
@@ -38,7 +38,7 @@
                 mappers=gyqw.jingcai.dao.BaseMapper
             </value>
         </property>
-        <property name="sqlSessionFactoryBeanName" value="decisionSqlSessionFactory"/>
+        <property name="sqlSessionFactoryBeanName" value="jingcaiSqlSessionFactory"/>
     </bean>
 
 </beans>

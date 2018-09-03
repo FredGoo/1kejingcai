@@ -1,15 +1,12 @@
 package gyqw.jingcai.controller;
 
 import gyqw.jingcai.domain.Product;
-import gyqw.jingcai.model.BaseResultModel;
+import gyqw.jingcai.model.BaseModel;
 import gyqw.jingcai.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,10 +23,17 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/getProductByCategoryId", method = RequestMethod.GET)
-    public BaseResultModel findProductByCategoryId(@RequestParam("categoryId") int categoryId) {
-        BaseResultModel baseResultModel = new BaseResultModel();
+    public BaseModel findProductByCategoryId(@RequestParam("categoryId") int categoryId) {
+        BaseModel baseModel = new BaseModel();
         List<Product> productList = this.productService.getProductListByCategoryId(categoryId);
-        baseResultModel.setResult(productList);
-        return baseResultModel;
+        baseModel.setResult(productList);
+        return baseModel;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public BaseModel update(@RequestBody Product product) {
+        BaseModel baseModel = new BaseModel();
+        baseModel.setResult(this.productService.updateProduct(product));
+        return baseModel;
     }
 }

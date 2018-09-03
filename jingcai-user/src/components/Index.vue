@@ -130,6 +130,15 @@
           '菜品2'
         ]
       }
+    },
+    mounted: function () {
+    },
+    methods: {
+      // 获取类别
+      getCategories() {
+        this.$axios
+          .get('/')
+      }
     }
   }
 </script>

@@ -16,7 +16,7 @@ public interface ProductService {
      * @param product 产品信息
      * @return 更新后的产品信息
      */
-    Product mergeProduct(Product product);
+    int updateProduct(Product product);
 
     /**
      * 根据产品id删除产品
