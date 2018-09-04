@@ -51,7 +51,7 @@
         </javaClientGenerator>
 
         <!-- oracle 使用 schema 对应 用户名称空间 mysql 使用 catalog 对应 数据库 -->
-        <table schema="${database.schema}" tableName="categories" enableCountByExample="false"
+        <table schema="${database.schema}" tableName="orders" enableCountByExample="false"
                enableDeleteByExample="false" enableUpdateByExample="false"
                selectByExampleQueryId="false" enableSelectByExample="false">
             <property name="useActualColumnNames" value="false" />

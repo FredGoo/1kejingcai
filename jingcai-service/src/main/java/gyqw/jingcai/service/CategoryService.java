@@ -4,6 +4,9 @@ import gyqw.jingcai.domain.Category;
 
 import java.util.List;
 
+/**
+ * 类别接口
+ */
 public interface CategoryService {
 
     /**

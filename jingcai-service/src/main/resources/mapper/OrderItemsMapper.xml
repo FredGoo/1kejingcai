@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gyqw.jingcai.dao.OrderItemsMapper">
+  <resultMap id="BaseResultMap" type="gyqw.jingcai.domain.OrderItem">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="N_ID" jdbcType="INTEGER" property="nId" />
+    <result column="C_ORDER_NO" jdbcType="VARCHAR" property="cOrderNo" />
+    <result column="N_PRODUCT_ID" jdbcType="INTEGER" property="nProductId" />
+    <result column="C_PRODUCT_TITLE" jdbcType="VARCHAR" property="cProductTitle" />
+    <result column="N_PRODUCT_AMOUNT" jdbcType="INTEGER" property="nProductAmount" />
+    <result column="N_PRODUCT_PCS" jdbcType="INTEGER" property="nProductPcs" />
+    <result column="D_CREATE" jdbcType="TIMESTAMP" property="dCreate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    N_ID, C_ORDER_NO, N_PRODUCT_ID, C_PRODUCT_TITLE, N_PRODUCT_AMOUNT, N_PRODUCT_PCS, 
+    D_CREATE
+  </sql>
+</mapper>
