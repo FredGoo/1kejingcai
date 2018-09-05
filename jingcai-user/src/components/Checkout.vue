@@ -26,16 +26,16 @@
             自选订单
           </van-col>
           <van-col span="12" style="text-align: right;font-size: 14px;">
-            小计：<span style="color: #C8A550;">15.20</span>
+            <!--小计：<span style="color: #C8A550;">15.20</span>-->
           </van-col>
         </van-row>
       </div>
       <div slot="footer">
         <van-row>
-          <van-col span="11">
-            <van-button size="large" type="brown">再来一单</van-button>
-          </van-col>
-          <van-col span="11" offset="2">
+          <!--<van-col span="11">-->
+            <!--<van-button size="large" type="brown">再来一单</van-button>-->
+          <!--</van-col>-->
+          <van-col span="11" offset="13">
             <van-button size="large">删除订单</van-button>
           </van-col>
         </van-row>

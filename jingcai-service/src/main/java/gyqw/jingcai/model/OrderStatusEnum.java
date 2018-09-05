@@ -5,9 +5,10 @@ package gyqw.jingcai.model;
  * @date 2018/09/04 21:20
  */
 public enum OrderStatusEnum {
-    INIT,
-    PRODUCT_ITEM_SAVED,
-    USER_INFO_SAVED,
+    // 订单信息已保存
+    SAVED,
+    // 未支付
     UNPAID,
+    // 已支付
     PAID
 }

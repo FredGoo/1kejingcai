@@ -5,6 +5,8 @@ package gyqw.jingcai.model;
  * @date 2018/09/04 21:20
  */
 public enum OrderTypeEnum {
-    TO_GO,
+    // 配送
+    DELIVERY,
+    // 堂食
     AT_SITE
 }

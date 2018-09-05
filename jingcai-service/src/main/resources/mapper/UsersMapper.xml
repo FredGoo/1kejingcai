@@ -1,18 +1,22 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="gyqw.jingcai.dao.UsersMapper" >
-  <resultMap id="BaseResultMap" type="gyqw.jingcai.domain.User" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gyqw.jingcai.dao.UsersMapper">
+  <resultMap id="BaseResultMap" type="gyqw.jingcai.domain.User">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="N_ID" property="nId" jdbcType="INTEGER" />
-    <result column="C_OPEN_ID" property="cOpenId" jdbcType="VARCHAR" />
-    <result column="D_CREATE" property="dCreate" jdbcType="TIMESTAMP" />
+    <id column="N_ID" jdbcType="INTEGER" property="nId" />
+    <result column="C_OPEN_ID" jdbcType="VARCHAR" property="cOpenId" />
+    <result column="D_UPDATE" jdbcType="TIMESTAMP" property="dUpdate" />
+    <result column="C_ADDRESS" jdbcType="VARCHAR" property="cAddress" />
+    <result column="D_CREATE" jdbcType="TIMESTAMP" property="dCreate" />
+    <result column="C_MOBILE" jdbcType="VARCHAR" property="cMobile" />
+    <result column="C_NAME" jdbcType="VARCHAR" property="cName" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    N_ID, C_OPEN_ID, D_CREATE
+    N_ID, C_OPEN_ID, D_UPDATE, C_ADDRESS, D_CREATE, C_MOBILE, C_NAME
   </sql>
 </mapper>

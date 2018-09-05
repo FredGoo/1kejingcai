@@ -12,9 +12,7 @@
         </div>
       </van-col>
       <van-col span="8" offset="8">
-        <router-link to="/checkout">
-          <van-button type="default" size="small" class="button-brown">下&nbsp;单</van-button>
-        </router-link>
+        <van-button type="default" size="small" class="button-brown" @click="onSubmitOrder">下&nbsp;单</van-button>
       </van-col>
     </van-row>
     <!-- ./ header -->
@@ -119,6 +117,9 @@
 </template>
 
 <script>
+  import LocalStorage from '../store/localStorage'
+  import {Toast} from 'vant';
+
   export default {
     name: 'Index',
     data: function () {
@@ -157,6 +158,10 @@
 
               // 获取当前类下的产品
               this.getProductByCategory(this.currentCategory.nId)
+
+              // 获取localStorage
+              this.totalPrice = LocalStorage.fetch().totalPrice
+              this.cart = LocalStorage.fetch().orderItemList
             }
           })
       },
@@ -206,8 +211,8 @@
         for (let cartProductIndex in this.cart) {
           let cartProduct = this.cart[cartProductIndex]
           if (cartProduct.nId == product.nId) {
-            product.pcs = this.cart[cartProductIndex].pcs + 1
-            this.cart.splice(cartProductIndex, product)
+            product.pcs = parseInt(this.cart[cartProductIndex].pcs) + 1
+            this.cart.splice(cartProductIndex, 1, product)
 
             productAlreadyIn = true
           }
@@ -229,7 +234,7 @@
           this.cart.splice(index, 1)
         } else {
           product.pcs = toPcs
-          this.cart.splice(index, product)
+          this.cart.splice(index, 1, product)
         }
 
         this.calcTotalAmount()
@@ -243,6 +248,19 @@
         }
 
         this.totalPrice = totalPrice
+      },
+      // 下单
+      onSubmitOrder() {
+        if (this.cart.length < 1) {
+          Toast('请选择菜品');
+          return
+        }
+
+        LocalStorage.save({
+          orderItemList: this.cart,
+          totalPrice: this.totalPrice
+        })
+        this.$router.push('/orderInfo')
       }
     }
   }

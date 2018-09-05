@@ -15,6 +15,8 @@
     <result column="N_TOTAL_AMOUNT" jdbcType="INTEGER" property="nTotalAmount" />
     <result column="N_USER_ID" jdbcType="INTEGER" property="nUserId" />
     <result column="C_CUST_NAME" jdbcType="VARCHAR" property="cCustName" />
+    <result column="C_MOBILE" jdbcType="VARCHAR" property="cMobile" />
+    <result column="C_DELIVER" jdbcType="VARCHAR" property="cDeliver" />
     <result column="D_DELIVER" jdbcType="TIMESTAMP" property="dDeliver" />
     <result column="D_CREATE" jdbcType="TIMESTAMP" property="dCreate" />
     <result column="D_UPDATE" jdbcType="TIMESTAMP" property="dUpdate" />
@@ -24,18 +26,20 @@
       WARNING - @mbg.generated
     -->
     <result column="T_CUST_ADDRESS" jdbcType="LONGVARCHAR" property="tCustAddress" />
+    <result column="T_REMARK" jdbcType="LONGVARCHAR" property="tRemark" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
     N_ID, C_ORDER_NO, N_TYPE, N_STATUS, N_PRODUCTS_AMOUNT, N_SERVICE_AMOUNT, N_DISCOUNT_AMOUNT, 
-    N_TOTAL_AMOUNT, N_USER_ID, C_CUST_NAME, D_DELIVER, D_CREATE, D_UPDATE
+    N_TOTAL_AMOUNT, N_USER_ID, C_CUST_NAME, C_MOBILE, C_DELIVER, D_DELIVER, D_CREATE, 
+    D_UPDATE
   </sql>
   <sql id="Blob_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    T_CUST_ADDRESS
+    T_CUST_ADDRESS, T_REMARK
   </sql>
 </mapper>

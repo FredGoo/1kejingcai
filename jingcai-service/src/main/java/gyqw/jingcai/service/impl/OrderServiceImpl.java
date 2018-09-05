@@ -6,6 +6,7 @@ import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.OrderItem;
 import gyqw.jingcai.domain.User;
 import gyqw.jingcai.model.OrderModel;
+import gyqw.jingcai.model.OrderStatusEnum;
 import gyqw.jingcai.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,11 @@ public class OrderServiceImpl implements OrderService {
 
             // 添加订单
             order.setcOrderNo(orderNo);
+            order.setnStatus(OrderStatusEnum.SAVED.ordinal());
             order.setnUserId(user.getnId());
+            order.setcCustName(user.getcName());
+            order.setcMobile(user.getcMobile());
+            order.settCustAddress(user.getcAddress());
             order.setdCreate(now);
             int orderRes = this.ordersMapper.insertSelective(order);
 

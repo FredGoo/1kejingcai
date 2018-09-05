@@ -50,6 +50,15 @@ public class Order implements Serializable {
     @Column(name = "C_CUST_NAME")
     private String cCustName;
 
+    /**
+     * 手机
+     */
+    @Column(name = "C_MOBILE")
+    private String cMobile;
+
+    @Column(name = "C_DELIVER")
+    private String cDeliver;
+
     @Column(name = "D_DELIVER")
     private Date dDeliver;
 
@@ -67,6 +76,12 @@ public class Order implements Serializable {
 
     @Column(name = "T_CUST_ADDRESS")
     private String tCustAddress;
+
+    /**
+     * 备注
+     */
+    @Column(name = "T_REMARK")
+    private String tRemark;
 
     private static final long serialVersionUID = 1L;
 
@@ -227,6 +242,38 @@ public class Order implements Serializable {
     }
 
     /**
+     * 获取手机
+     *
+     * @return C_MOBILE - 手机
+     */
+    public String getcMobile() {
+        return cMobile;
+    }
+
+    /**
+     * 设置手机
+     *
+     * @param cMobile 手机
+     */
+    public void setcMobile(String cMobile) {
+        this.cMobile = cMobile == null ? null : cMobile.trim();
+    }
+
+    /**
+     * @return C_DELIVER
+     */
+    public String getcDeliver() {
+        return cDeliver;
+    }
+
+    /**
+     * @param cDeliver
+     */
+    public void setcDeliver(String cDeliver) {
+        this.cDeliver = cDeliver == null ? null : cDeliver.trim();
+    }
+
+    /**
      * @return D_DELIVER
      */
     public Date getdDeliver() {
@@ -290,6 +337,24 @@ public class Order implements Serializable {
         this.tCustAddress = tCustAddress == null ? null : tCustAddress.trim();
     }
 
+    /**
+     * 获取备注
+     *
+     * @return T_REMAKR - 备注
+     */
+    public String gettRemark() {
+        return tRemark;
+    }
+
+    /**
+     * 设置备注
+     *
+     * @param tRemark 备注
+     */
+    public void settRemakr(String tRemark) {
+        this.tRemark = tRemark == null ? null : tRemark.trim();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -306,10 +371,13 @@ public class Order implements Serializable {
         sb.append(", nTotalAmount=").append(nTotalAmount);
         sb.append(", nUserId=").append(nUserId);
         sb.append(", cCustName=").append(cCustName);
+        sb.append(", cMobile=").append(cMobile);
+        sb.append(", cDeliver=").append(cDeliver);
         sb.append(", dDeliver=").append(dDeliver);
         sb.append(", dCreate=").append(dCreate);
         sb.append(", dUpdate=").append(dUpdate);
         sb.append(", tCustAddress=").append(tCustAddress);
+        sb.append(", tRemakr=").append(tRemark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
