@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping("index")
-    public String index() {
+    @RequestMapping("/wechatLogin")
+    public String wechatLogin() {
         return "index";
+    }
+
+    @RequestMapping("/wechatLoginTest")
+    public String wechatLoginTest() {
+        return "wechatLogin";
     }
 }
