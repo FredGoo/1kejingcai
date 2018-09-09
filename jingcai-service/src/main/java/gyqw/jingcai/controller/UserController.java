@@ -9,14 +9,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    @RequestMapping("/wechatLogin")
-    public String wechatLogin() {
-        return "index";
-    }
-
-    @RequestMapping("/wechatLoginTest")
-    public String wechatLoginTest() {
-        return "wechatLogin";
-    }
 }
