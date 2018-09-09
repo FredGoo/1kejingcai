@@ -160,8 +160,11 @@
               this.getProductByCategory(this.currentCategory.nId)
 
               // 获取localStorage
-              this.totalPrice = LocalStorage.fetch().totalPrice
-              this.cart = LocalStorage.fetch().orderItemList
+              let store = LocalStorage.fetch()
+              if (store.totalPrice && store.orderItemList) {
+                this.totalPrice = store.totalPrice
+                this.cart = store.orderItemList
+              }
             }
           })
       },
