@@ -89,6 +89,7 @@
 <script>
   import {Toast} from 'vant';
   import LocalStorage from '../store/localStorage'
+  import User from '../api/user'
 
   const time = ['11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
   const date = {
@@ -149,6 +150,7 @@
       }
     },
     mounted: function () {
+      User.checkLogin()
       this.init()
     },
     methods: {

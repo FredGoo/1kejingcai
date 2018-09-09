@@ -12,7 +12,7 @@ public interface UserService {
      * @param user 用户信息
      * @return 创建成功的用户信息
      */
-    User createUser(User user);
+    int createUser(User user);
 
     /**
      * 根据id获取用户信息
@@ -21,6 +21,14 @@ public interface UserService {
      * @return 用户信息
      */
     User findUserById(int id);
+
+    /**
+     * 根据openId获取用户信息
+     *
+     * @param openId
+     * @return
+     */
+    User findUserByOpenId(String openId);
 
     /**
      * 根据id删除用户

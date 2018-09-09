@@ -1,10 +1,15 @@
 package gyqw.jingcai.controller;
 
+import gyqw.jingcai.domain.User;
+import gyqw.jingcai.service.UserService;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,32 +17,73 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 
 @RequestMapping("/wechat")
 @RestController
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
 
+    @Value("${wechat.mall.home.url}")
+    private String url;
+
     private WxMpService wxMpService;
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Autowired
     public void setWxMpService(WxMpService wxMpService) {
         this.wxMpService = wxMpService;
     }
 
-    @RequestMapping("/login")
-    public String login() {
-        return "login";
+    @RequestMapping("/redirect")
+    public void redirect(@RequestParam("code") String code, HttpServletResponse response, HttpSession httpSession) {
+        try {
+            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = this.wxMpService.oauth2getAccessToken(code);
+            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            String openId = wxMpUser.getOpenId();
+
+            // 查找用户
+            User user = this.userService.findUserByOpenId(openId);
+            if (user == null) {
+                // 新用户，创建用户
+                user = new User();
+                user.setcOpenId(openId);
+                user.setdCreate(new Date());
+                this.userService.createUser(user);
+                user = this.userService.findUserByOpenId(openId);
+            }
+
+            // 用户自动登录
+            httpSession.setAttribute("userId", user.getnId());
+            response.sendRedirect(this.url);
+        } catch (Exception e) {
+            logger.error("redirect error", e);
+        }
     }
 
-    @RequestMapping("/loginTest")
-    public String loginTest() {
-        return "login test";
+    @RequestMapping("/hackIn")
+    public String login(@RequestParam("hackLogin") String userId, HttpSession httpSession) {
+        if (!org.springframework.util.StringUtils.isEmpty(userId)) {
+            httpSession.setAttribute("userId", userId);
+        }
+        return "hackIn";
     }
 
-    @RequestMapping(value = "/service")
-    public void checkSignature(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @RequestMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.setAttribute("userId", null);
+        return "logout";
+    }
+
+    @RequestMapping("/service")
+    public void checkSignature(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.info("接收到来自微信服务器的认证消息");
 
         response.setContentType("text/html;charset=utf-8");
@@ -55,6 +101,7 @@ public class WechatController {
         if (StringUtils.isNotBlank(echoStr)) {
             // 说明是一个仅仅用来验证的请求，回显echostr
             response.getWriter().println(echoStr);
+            return;
         }
     }
 }

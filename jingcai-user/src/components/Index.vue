@@ -117,8 +117,9 @@
 </template>
 
 <script>
-  import LocalStorage from '../store/localStorage'
   import {Toast} from 'vant';
+  import LocalStorage from '../store/localStorage'
+  import User from '../api/user'
 
   export default {
     name: 'Index',
@@ -141,6 +142,7 @@
       }
     },
     mounted: function () {
+      User.checkLogin()
       this.init()
     },
     methods: {

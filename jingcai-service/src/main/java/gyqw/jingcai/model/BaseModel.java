@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class BaseModel implements Serializable {
     private boolean status;
     private Object result;
+    private String errorCode;
     private String errorMessage;
 
     public BaseModel() {
@@ -35,11 +36,20 @@ public class BaseModel implements Serializable {
         this.errorMessage = errorMessage;
     }
 
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
     @Override
     public String toString() {
         return "BaseModel{" +
                 "status=" + status +
                 ", result=" + result +
+                ", errorCode='" + errorCode + '\'' +
                 ", errorMessage='" + errorMessage + '\'' +
                 '}';
     }
