@@ -1,78 +1,147 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input placeholder="姓名" style="width: 200px;" class="filter-item" v-model="listQuery.name"/>
+      <el-input placeholder="手机号" style="width: 200px;" class="filter-item" v-model="listQuery.mobile"/>
+      <el-select placeholder="类型" class="filter-item" v-model="listQuery.type" :clearable="true">
+        <el-option label="配送" :value="0"/>
+        <el-option label="自取" :value="1"/>
+      </el-select>
+      <el-select placeholder="状态" class="filter-item" v-model="listQuery.status" :clearable="true">
+        <el-option label="已保存" :value="0"/>
+        <el-option label="未支付" :value="1"/>
+        <el-option label="已支付" :value="2"/>
+        <el-option label="已配送" :value="3"/>
+      </el-select>
+      <el-button type="primary" class="filter-item" @click="fetchData">搜索</el-button>
+    </div>
+
     <el-table
       v-loading="listLoading"
       :data="list"
-      element-loading-text="Loading"
+      element-loading-text="加载中"
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="#" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="订单号">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.order.cOrderNo }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="类型">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          {{ scope.row.order.nType | typeFilter }}
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column label="状态">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.order.nStatus | statusFilter }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column label="总金额">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          &yen;{{ (scope.row.order.nTotalAmount /100).toFixed(2) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column label="联系方式">
         <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          <div>{{ scope.row.order.cCustName }}&nbsp;{{ scope.row.order.cMobile }}</div>
+          <div>{{ scope.row.order.tCustAddress }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="菜品">
+        <template slot-scope="scope">
+          <div v-for="item of scope.row.orderItemList">
+            {{ item.cProductTitle }}&nbsp;{{ (item.nProductAmount /100).toFixed(2) }}&nbsp;*&nbsp;{{ item.nProductPcs }}
+          </div>
         </template>
       </el-table-column>
     </el-table>
+    <div>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="listQuery.page"
+        :page-size="listQuery.row"
+        layout="total, prev, pager, next, jumper"
+        :total="listTotal">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+  import {getList, getListCount} from '@/api/order'
 
-export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+  export default {
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          '0': '已保存',
+          '1': '未支付',
+          '2': '已支付',
+          '3': '已配送'
+        }
+        return statusMap[status]
+      },
+      typeFilter(status) {
+        const statusMap = {
+          '0': '配送',
+          '1': '自取'
+        }
+        return statusMap[status]
       }
-      return statusMap[status]
-    }
-  },
-  data() {
-    return {
-      list: null,
-      listLoading: true
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    },
+    data() {
+      return {
+        list: null,
+        listLoading: true,
+        listQuery: {
+          page: 1,
+          row: 20,
+          name: null,
+          mobile: null,
+          type: null,
+          status: null
+        },
+        listTotal: 0
+      }
+    },
+    created() {
+      this.fetchData()
+    },
+    methods: {
+      fetchData() {
+        this.listLoading = true
+        getListCount(this.listQuery).then(response => {
+          this.listTotal = response.result
+
+          getList(this.listQuery).then(response => {
+            this.list = response.result
+            this.listLoading = false
+          })
+        })
+      },
+      handleCurrentChange(val) {
+        this.listQuery.page = val
+        this.fetchData()
+      }
     }
   }
-}
 </script>
+
+<style>
+  .filter-container {
+    padding-bottom: 10px;
+  }
+
+  .filter-container .filter-item {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+  }
+</style>

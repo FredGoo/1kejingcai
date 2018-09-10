@@ -10,5 +10,7 @@ public enum OrderStatusEnum {
     // 未支付
     UNPAID,
     // 已支付
-    PAID
+    PAID,
+    // 已处理
+    FINISHED
 }

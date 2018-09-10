@@ -1,6 +1,7 @@
 package gyqw.jingcai.controller;
 
 import gyqw.jingcai.domain.User;
+import gyqw.jingcai.filter.OrderFilter;
 import gyqw.jingcai.model.BaseModel;
 import gyqw.jingcai.model.OrderModel;
 import gyqw.jingcai.service.OrderService;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author fred
- * @date 2018/09/04 11:54
+ * 2018/09/04 11:54
  */
 @RequestMapping("/order")
 @RestController
@@ -46,5 +47,19 @@ public class OrderController {
             baseModel.setErrorCode("400");
             return baseModel;
         }
+    }
+
+    @RequestMapping(value = "/list")
+    public BaseModel list(@RequestBody OrderFilter orderFilter) {
+        BaseModel baseModel = new BaseModel();
+        baseModel.setResult(this.orderService.list(orderFilter));
+        return baseModel;
+    }
+
+    @RequestMapping(value = "/listCount")
+    public BaseModel listCount(@RequestBody OrderFilter orderFilter) {
+        BaseModel baseModel = new BaseModel();
+        baseModel.setResult(this.orderService.listCount(orderFilter));
+        return baseModel;
     }
 }

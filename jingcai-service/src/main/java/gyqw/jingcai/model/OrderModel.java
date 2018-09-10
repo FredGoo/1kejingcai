@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author fred
- * @date 2018/09/04 17:09
+ * 2018/09/04 17:09
  */
 public class OrderModel implements Serializable {
     private User user;

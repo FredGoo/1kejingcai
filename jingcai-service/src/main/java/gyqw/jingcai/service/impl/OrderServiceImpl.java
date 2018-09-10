@@ -5,6 +5,7 @@ import gyqw.jingcai.dao.OrdersMapper;
 import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.OrderItem;
 import gyqw.jingcai.domain.User;
+import gyqw.jingcai.filter.OrderFilter;
 import gyqw.jingcai.model.OrderModel;
 import gyqw.jingcai.model.OrderStatusEnum;
 import gyqw.jingcai.service.OrderService;
@@ -12,11 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author fred
@@ -81,6 +83,85 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             logger.error("createOrder error", e);
             return false;
+        }
+    }
+
+    @Override
+    public List<OrderModel> list(OrderFilter orderFilter) {
+        List<OrderModel> orderModelList = new ArrayList<>();
+
+        try {
+            // 获得主订单
+            Condition orderCondition = new Condition(Order.class);
+            Example.Criteria criteria = orderCondition.createCriteria();
+            getCriteriaByFilter(criteria, orderFilter);
+            orderCondition.setOrderByClause("N_ID desc limit " + ((orderFilter.getPage() - 1) * orderFilter.getRow())
+                    + ", " + orderFilter.getRow());
+            List<Order> orderList = this.ordersMapper.selectByCondition(orderCondition);
+            List<String> orderNoList = new ArrayList<>();
+            for (Order order : orderList) {
+                orderNoList.add(order.getcOrderNo());
+            }
+
+            // 获得订单详情
+            Condition orderItemCondition = new Condition(OrderItem.class);
+            orderCondition.createCriteria().andIn("cOrderNo", orderNoList);
+            List<OrderItem> orderItemList = this.orderItemsMapper.selectByCondition(orderItemCondition);
+            Map<String, List<OrderItem>> orderItemListMap = new HashMap<>();
+            for (OrderItem orderItem : orderItemList) {
+                if (orderItemListMap.get(orderItem.getcOrderNo()) == null) {
+                    List<OrderItem> orderItemList1 = new ArrayList<>();
+                    orderItemList1.add(orderItem);
+                    orderItemListMap.put(orderItem.getcOrderNo(), orderItemList1);
+                } else {
+                    orderItemListMap.get(orderItem.getcOrderNo()).add(orderItem);
+                }
+            }
+
+            // 封装orderModel
+            for (Order order : orderList) {
+                OrderModel orderModel = new OrderModel();
+                orderModel.setOrder(order);
+                orderModel.setOrderItemList(orderItemListMap.get(order.getcOrderNo()));
+                orderModelList.add(orderModel);
+            }
+
+            return orderModelList;
+        } catch (Exception e) {
+            logger.error("list error", e);
+            return orderModelList;
+        }
+    }
+
+    @Override
+    public int listCount(OrderFilter orderFilter) {
+        try {
+            Condition condition = new Condition(Order.class);
+            Example.Criteria criteria = condition.createCriteria();
+            getCriteriaByFilter(criteria, orderFilter);
+            return this.ordersMapper.selectCountByCondition(condition);
+        } catch (Exception e) {
+            logger.error("listCount error", e);
+            return 0;
+        }
+    }
+
+    private void getCriteriaByFilter(Example.Criteria criteria, OrderFilter orderFilter) {
+        // 姓名
+        if (!StringUtils.isEmpty(orderFilter.getName())) {
+            criteria.andEqualTo("cCustName", orderFilter.getName());
+        }
+        // 手机号
+        if (!StringUtils.isEmpty(orderFilter.getMobile())) {
+            criteria.andEqualTo("cMobile", orderFilter.getMobile());
+        }
+        // 类型
+        if (!StringUtils.isEmpty(orderFilter.getType())) {
+            criteria.andEqualTo("nType", orderFilter.getType());
+        }
+        // 状态
+        if (!StringUtils.isEmpty(orderFilter.getStatus())) {
+            criteria.andEqualTo("nStatus", orderFilter.getStatus());
         }
     }
 }
