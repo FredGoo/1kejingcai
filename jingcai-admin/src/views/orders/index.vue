@@ -52,6 +52,7 @@
         <template slot-scope="scope">
           <div>{{ scope.row.order.cCustName }}&nbsp;{{ scope.row.order.cMobile }}</div>
           <div>{{ scope.row.order.tCustAddress }}</div>
+          <div>{{ scope.row.order.cDeliver }}</div>
         </template>
       </el-table-column>
       <el-table-column label="菜品">
@@ -134,7 +135,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .filter-container {
     padding-bottom: 10px;
   }

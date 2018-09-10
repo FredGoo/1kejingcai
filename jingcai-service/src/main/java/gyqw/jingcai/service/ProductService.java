@@ -24,7 +24,7 @@ public interface ProductService {
      * @param id 产品id
      * @return true/false
      */
-    boolean deleteProductById(int id);
+    int deleteProductById(int id);
 
     /**
      * 根据类别id获取产品
@@ -33,5 +33,12 @@ public interface ProductService {
      * @return 产品列表
      */
     List<Product> getProductListByCategoryId(int categoryId);
+
+    /**
+     * 获取所有产品
+     *
+     * @return 产品列表
+     */
+    List<Product> getAll();
 
 }

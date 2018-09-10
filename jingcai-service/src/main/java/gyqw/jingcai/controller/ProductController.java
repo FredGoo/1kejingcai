@@ -22,6 +22,14 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @RequestMapping("/list")
+    public BaseModel list() {
+        BaseModel baseModel = new BaseModel();
+        List<Product> productList = this.productService.getAll();
+        baseModel.setResult(productList);
+        return baseModel;
+    }
+
     @RequestMapping(value = "/getProductByCategoryId", method = RequestMethod.GET)
     public BaseModel findProductByCategoryId(@RequestParam("categoryId") int categoryId) {
         BaseModel baseModel = new BaseModel();
@@ -34,6 +42,13 @@ public class ProductController {
     public BaseModel update(@RequestBody Product product) {
         BaseModel baseModel = new BaseModel();
         baseModel.setResult(this.productService.updateProduct(product));
+        return baseModel;
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseModel delete(@RequestBody Product product) {
+        BaseModel baseModel = new BaseModel();
+        baseModel.setResult(this.productService.deleteProductById(product.getnId()));
         return baseModel;
     }
 }

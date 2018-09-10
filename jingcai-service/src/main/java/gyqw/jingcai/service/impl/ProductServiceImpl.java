@@ -53,9 +53,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProductById(int id) {
-        // todo
-        return false;
+    public int deleteProductById(int id) {
+        try {
+            return this.productsMapper.deleteByPrimaryKey(id);
+        } catch (Exception e) {
+            logger.error("deleteProductById error", e);
+            return 0;
+        }
     }
 
     @Override
@@ -86,5 +90,10 @@ public class ProductServiceImpl implements ProductService {
             logger.error("getProductListByCategoryId error", e);
             return productList;
         }
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return this.productsMapper.selectAll();
     }
 }
