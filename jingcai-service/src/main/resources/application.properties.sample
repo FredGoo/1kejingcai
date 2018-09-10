@@ -1,0 +1,9 @@
+database.url=
+database.username=
+database.password=
+wechat.appId=wxe015501fb92a57da
+wechat.appSecret=0f78e41d01ad413eeac902dac173c6b6
+wechat.token=wechat_xiaobaitu_2516861795
+spring.redis.host=
+spring.redis.port=
+spring.redis.database=
