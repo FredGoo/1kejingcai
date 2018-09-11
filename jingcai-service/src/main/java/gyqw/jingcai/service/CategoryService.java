@@ -22,7 +22,7 @@ public interface CategoryService {
      *
      * @return
      */
-    List<Category> listAll();
+    List<Category> getAll();
 
     /**
      * 根据id删除类别
@@ -31,4 +31,13 @@ public interface CategoryService {
      * @return
      */
     int deleteById(int id);
+
+    /**
+     * 关联产品id到类别id
+     *
+     * @param categoryId
+     * @param productIdList
+     * @return
+     */
+    int relateProductIdToCategoryId(int categoryId, List<Integer> productIdList);
 }

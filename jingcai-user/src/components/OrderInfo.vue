@@ -242,6 +242,7 @@
           })
           .then(response => {
             console.log(response)
+            alert(下单成功)
           })
       },
       // 配送方式选择
