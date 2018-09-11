@@ -29,7 +29,7 @@ public class CategoryController {
         return baseModel;
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public BaseModel create(@RequestBody Category category) {
         BaseModel baseModel = new BaseModel();
         baseModel.setResult(this.categoryService.updateCategory(category));
@@ -37,9 +37,9 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public BaseModel delete(@RequestParam("id") int id) {
+    public BaseModel delete(@RequestBody Category category) {
         BaseModel baseModel = new BaseModel();
-        baseModel.setResult(this.categoryService.deleteById(id));
+        baseModel.setResult(this.categoryService.deleteById(category.getnId()));
         return baseModel;
     }
 
