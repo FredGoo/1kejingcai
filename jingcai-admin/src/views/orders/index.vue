@@ -117,6 +117,11 @@
     },
     created() {
       this.fetchData()
+
+      const timeId = setInterval(() => {
+        this.fetchData()
+      }, 30000)
+
     },
     methods: {
       // 获取订单数据
