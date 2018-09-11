@@ -1,7 +1,7 @@
 <template>
   <van-row>
     <van-submit-bar
-      button-text="确认订单"
+      button-text="支付"
       button-type="brown"
       @submit="onSubmit">
       <span slot>
@@ -242,7 +242,7 @@
           })
           .then(response => {
             console.log(response)
-            alert(下单成功)
+            Toast('下单成功')
           })
       },
       // 配送方式选择
