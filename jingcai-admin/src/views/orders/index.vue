@@ -41,6 +41,9 @@
       <el-table-column label="状态">
         <template slot-scope="scope">
           {{ scope.row.order.nStatus | statusFilter }}
+          <el-button v-if="scope.row.order.nStatus == 2" type="success"
+                     @click="handleOrderFinished(scope.row.order.nId)">完成
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="总金额">
@@ -76,7 +79,7 @@
 </template>
 
 <script>
-  import {getList, getListCount} from '@/api/order'
+  import {getList, getListCount, setOrderFinished} from '@/api/order'
 
   export default {
     filters: {
@@ -85,7 +88,7 @@
           '0': '已保存',
           '1': '未支付',
           '2': '已支付',
-          '3': '已配送'
+          '3': '已完成'
         }
         return statusMap[status]
       },
@@ -116,6 +119,7 @@
       this.fetchData()
     },
     methods: {
+      // 获取订单数据
       fetchData() {
         this.listLoading = true
         getListCount(this.listQuery).then(response => {
@@ -127,9 +131,16 @@
           })
         })
       },
+      // 换页
       handleCurrentChange(val) {
         this.listQuery.page = val
         this.fetchData()
+      },
+      // 完成订单
+      handleOrderFinished(id) {
+        setOrderFinished(id).then(response => {
+          this.fetchData()
+        })
       }
     }
   }

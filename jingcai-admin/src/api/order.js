@@ -15,3 +15,14 @@ export function getListCount(params) {
     data: params
   })
 }
+
+export function setOrderFinished(id) {
+  return request({
+    url: '/order/update',
+    method: 'post',
+    data: {
+      nId: id,
+      nStatus: 3
+    }
+  })
+}

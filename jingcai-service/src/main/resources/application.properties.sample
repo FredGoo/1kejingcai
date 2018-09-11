@@ -1,4 +1,4 @@
-database.url=
+database.url=jdbc:mysql://0.0.0.0:3306/database?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
 database.username=
 database.password=
 wechat.appId=wxe015501fb92a57da
