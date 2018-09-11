@@ -87,6 +87,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public int update(Order order) {
+        try {
+            order.setdUpdate(new Date());
+            return this.ordersMapper.updateByPrimaryKeySelective(order);
+        } catch (Exception e) {
+            logger.error("update error", e);
+            return 0;
+        }
+    }
+
+    @Override
     public List<OrderModel> list(OrderFilter orderFilter) {
         List<OrderModel> orderModelList = new ArrayList<>();
 

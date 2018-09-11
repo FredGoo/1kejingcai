@@ -1,5 +1,6 @@
 package gyqw.jingcai.service;
 
+import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.filter.OrderFilter;
 import gyqw.jingcai.model.OrderModel;
 
@@ -17,6 +18,14 @@ public interface OrderService {
      * @return 成功/失败
      */
     boolean createOrder(OrderModel orderModel);
+
+    /**
+     * 更新订单信息
+     *
+     * @param order
+     * @return
+     */
+    int update(Order order);
 
     /**
      * 根据过滤器获取订单列表

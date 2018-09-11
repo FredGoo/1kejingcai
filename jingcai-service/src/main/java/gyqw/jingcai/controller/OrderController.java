@@ -1,5 +1,6 @@
 package gyqw.jingcai.controller;
 
+import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.User;
 import gyqw.jingcai.filter.OrderFilter;
 import gyqw.jingcai.model.BaseModel;
@@ -60,6 +61,13 @@ public class OrderController {
     public BaseModel listCount(@RequestBody OrderFilter orderFilter) {
         BaseModel baseModel = new BaseModel();
         baseModel.setResult(this.orderService.listCount(orderFilter));
+        return baseModel;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public BaseModel update(@RequestBody Order order) {
+        BaseModel baseModel = new BaseModel();
+        baseModel.setResult(this.orderService.update(order));
         return baseModel;
     }
 }
