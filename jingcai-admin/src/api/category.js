@@ -22,3 +22,28 @@ export function deleteItem(id) {
     data: {nId: id}
   })
 }
+
+export function getProductByCategory(id) {
+  return request({
+    url: '/product/getProductByCategoryId',
+    method: 'get',
+    params: {
+      categoryId: id
+    }
+  })
+}
+
+export function getAllProduct() {
+  return request({
+    url: '/product/list',
+    method: 'get'
+  })
+}
+
+export function saveProductAndCategoryRelation(data) {
+  return request({
+    url: '/category/relateCategoryList',
+    method: 'post',
+    data: data
+  })
+}

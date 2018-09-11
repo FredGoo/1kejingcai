@@ -14,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -31,12 +33,12 @@ public class OrderServiceImpl implements OrderService {
     private OrdersMapper ordersMapper;
     private OrderItemsMapper orderItemsMapper;
 
-    @Autowired
+    @Resource
     public void setOrdersMapper(OrdersMapper ordersMapper) {
         this.ordersMapper = ordersMapper;
     }
 
-    @Autowired
+    @Resource
     public void setOrderItemsMapper(OrderItemsMapper orderItemsMapper) {
         this.orderItemsMapper = orderItemsMapper;
     }
