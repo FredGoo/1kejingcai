@@ -1,7 +1,12 @@
 package gyqw.jingcai.controller;
 
+import gyqw.jingcai.domain.Category;
+import gyqw.jingcai.domain.Config;
 import gyqw.jingcai.domain.User;
+import gyqw.jingcai.model.BaseModel;
+import gyqw.jingcai.service.ConfigService;
 import gyqw.jingcai.service.UserService;
+import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -11,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @RequestMapping("/wechat")
 @RestController
@@ -31,6 +38,7 @@ public class WechatController {
 
     private WxMpService wxMpService;
     private UserService userService;
+    private ConfigService configService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -40,6 +48,11 @@ public class WechatController {
     @Autowired
     public void setWxMpService(WxMpService wxMpService) {
         this.wxMpService = wxMpService;
+    }
+
+    @Autowired
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
     }
 
     @RequestMapping("/redirect")
@@ -103,5 +116,18 @@ public class WechatController {
             response.getWriter().println(echoStr);
             return;
         }
+    }
+
+    @RequestMapping(value = "/createMenu", method = RequestMethod.POST)
+    public BaseModel createMenu() {
+        BaseModel baseModel = new BaseModel();
+        try {
+            List<Config> configList = this.configService.getConfigByCategory("wechat.menu");
+            baseModel.setResult(this.wxMpService.getMenuService().menuCreate(configList.get(0).getcVal()));
+        } catch (Exception e) {
+            logger.error("createMenu error", e);
+            baseModel.setResult(e.getMessage());
+        }
+        return baseModel;
     }
 }

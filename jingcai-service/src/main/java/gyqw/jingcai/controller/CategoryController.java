@@ -1,6 +1,5 @@
 package gyqw.jingcai.controller;
 
-import gyqw.jingcai.dao.BaseMapper;
 import gyqw.jingcai.domain.Category;
 import gyqw.jingcai.model.BaseModel;
 import gyqw.jingcai.model.CategoryProductListModel;
@@ -8,7 +7,10 @@ import gyqw.jingcai.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/category")
 @RestController
