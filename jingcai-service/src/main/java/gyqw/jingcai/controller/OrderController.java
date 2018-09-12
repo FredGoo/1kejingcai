@@ -70,4 +70,17 @@ public class OrderController {
         baseModel.setResult(this.orderService.update(order));
         return baseModel;
     }
+
+    @RequestMapping(value = "/userOrder", method = RequestMethod.GET)
+    public BaseModel userOrder(HttpSession httpSession) {
+        BaseModel baseModel = new BaseModel();
+
+        OrderFilter orderFilter = new OrderFilter();
+        orderFilter.setPage(1);
+        orderFilter.setRow(999);
+        orderFilter.setUserId(Integer.valueOf(httpSession.getAttribute("userId").toString()));
+
+        baseModel.setResult(this.orderService.list(orderFilter));
+        return baseModel;
+    }
 }

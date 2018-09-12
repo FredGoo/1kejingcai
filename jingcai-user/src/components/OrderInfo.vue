@@ -243,6 +243,7 @@
           .then(response => {
             console.log(response)
             Toast('下单成功')
+            this.$router.push('/userOrders')
           })
       },
       // 配送方式选择

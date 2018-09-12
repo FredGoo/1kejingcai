@@ -11,6 +11,15 @@ public class OrderFilter extends BaseFilter implements Serializable {
     private String mobile;
     private String type;
     private String status;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;
@@ -51,6 +60,7 @@ public class OrderFilter extends BaseFilter implements Serializable {
                 ", mobile='" + mobile + '\'' +
                 ", type='" + type + '\'' +
                 ", status='" + status + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }

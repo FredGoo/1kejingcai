@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Index from '@/components/Index'
 import Checkout from '@/components/Checkout'
 import OrderInfo from '@/components/OrderInfo'
+import UserOrders from '@/components/UserOrders'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
       path: '/orderInfo',
       name: 'OrderInfo',
       component: OrderInfo
+    }, {
+      path: '/userOrders',
+      name: 'UserOrders',
+      component: UserOrders
     }
   ]
 })

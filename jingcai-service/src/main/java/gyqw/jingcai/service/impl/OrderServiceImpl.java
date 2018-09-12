@@ -176,5 +176,9 @@ public class OrderServiceImpl implements OrderService {
         if (!StringUtils.isEmpty(orderFilter.getStatus())) {
             criteria.andEqualTo("nStatus", orderFilter.getStatus());
         }
+        // 用户id
+        if (orderFilter.getUserId() > 0) {
+            criteria.andEqualTo("nUserId", orderFilter.getUserId());
+        }
     }
 }
