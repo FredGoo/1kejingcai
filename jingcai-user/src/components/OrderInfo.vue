@@ -253,30 +253,19 @@
               .then(response1 => {
                 // this.$router.push('/userOrders')
                 // 微信支付
-                this.unifiedOrder = response1.data.result
-                if (typeof WeixinJSBridge == "undefined") {
-                  if (document.addEventListener) {
-                    document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
-                  } else if (document.attachEvent) {
-                    document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
-                    document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
-                  }
-                } else {
-                  this.onBridgeReady()
-                }
-
+                this.onBridgeReady(response1.data.result)
               })
           })
       },
-      onBridgeReady: function () {
+      onBridgeReady: function (data) {
         WeixinJSBridge.invoke(
           'getBrandWCPayRequest', {
-            "appId": this.unifiedOrder.appId,     //公众号名称，由商户传入
-            "timeStamp": this.unifiedOrder.timeStamp,         //时间戳，自1970年以来的秒数
-            "nonceStr": this.unifiedOrder.nonceStr, //随机串
-            "package": this.unifiedOrder.package,
+            "appId": data.appId,     //公众号名称，由商户传入
+            "timeStamp": data.timeStamp,         //时间戳，自1970年以来的秒数
+            "nonceStr": data.nonceStr, //随机串
+            "package": data.package,
             "signType": "MD5",         //微信签名方式：
-            "paySign": this.unifiedOrder.paySign //微信签名
+            "paySign": data.paySign //微信签名
           },
           function (res) {
             if (res.err_msg == "get_brand_wcpay_request:ok") {
