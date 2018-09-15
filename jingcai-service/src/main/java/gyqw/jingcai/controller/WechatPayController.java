@@ -1,8 +1,8 @@
 package gyqw.jingcai.controller;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
-import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import gyqw.jingcai.config.WxPayProperties;
 import gyqw.jingcai.domain.Order;
@@ -13,7 +13,10 @@ import gyqw.jingcai.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
@@ -125,8 +128,13 @@ public class WechatPayController {
     }
 
     @RequestMapping(value = "/receiveNotify")
-    public String receiveNotify(@RequestBody Map map) {
-        logger.info(map.toString());
+    public String receiveNotify(@RequestBody String xmlData) {
+        try {
+            WxPayOrderNotifyResult res = this.wxService.parseOrderNotifyResult(xmlData);
+            logger.info(res.toString());
+        } catch (Exception e) {
+            logger.error("receiveNotify error", e);
+        }
         return "";
     }
 

@@ -269,7 +269,7 @@
           },
           function (res) {
             if (res.err_msg == "get_brand_wcpay_request:ok") {
-              alert(res)
+              alert(JSON.stringify(res))
             }
           });
       },
