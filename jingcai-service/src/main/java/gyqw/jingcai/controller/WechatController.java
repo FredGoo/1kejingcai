@@ -59,8 +59,7 @@ public class WechatController {
     public void redirect(@RequestParam("code") String code, HttpServletResponse response, HttpSession httpSession) {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = this.wxMpService.oauth2getAccessToken(code);
-            WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-            String openId = wxMpUser.getOpenId();
+            String openId = wxMpOAuth2AccessToken.getOpenId();
 
             // 查找用户
             User user = this.userService.findUserByOpenId(openId);
