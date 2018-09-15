@@ -17,7 +17,7 @@ public interface OrderService {
      * @param orderModel 订单模型
      * @return 成功/失败
      */
-    boolean createOrder(OrderModel orderModel);
+    String createOrder(OrderModel orderModel);
 
     /**
      * 更新订单信息
@@ -42,4 +42,12 @@ public interface OrderService {
      * @return 订单列表
      */
     int listCount(OrderFilter orderFilter);
+
+    /**
+     * 根据订单号获取订单信息
+     *
+     * @param orderNo 订单号
+     * @return 订单信息
+     */
+    Order findOrderByOrderNo(String orderNo);
 }

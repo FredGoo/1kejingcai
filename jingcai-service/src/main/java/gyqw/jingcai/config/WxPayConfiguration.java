@@ -33,7 +33,6 @@ public class WxPayConfiguration {
         payConfig.setAppId(StringUtils.trimToNull(this.properties.getAppId()));
         payConfig.setMchId(StringUtils.trimToNull(this.properties.getMchId()));
         payConfig.setMchKey(StringUtils.trimToNull(this.properties.getMchKey()));
-        payConfig.setKeyPath(StringUtils.trimToNull(this.properties.getKeyPath()));
 
         WxPayService wxPayService = new WxPayServiceImpl();
         wxPayService.setConfig(payConfig);

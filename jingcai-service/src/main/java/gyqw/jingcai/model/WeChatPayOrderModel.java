@@ -12,6 +12,15 @@ public class WeChatPayOrderModel implements Serializable {
     private String orderNo;
     private Integer totalAmount;
     private String openId;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getBody() {
         return body;
@@ -52,6 +61,7 @@ public class WeChatPayOrderModel implements Serializable {
                 ", orderNo='" + orderNo + '\'' +
                 ", totalAmount=" + totalAmount +
                 ", openId='" + openId + '\'' +
+                ", ip='" + ip + '\'' +
                 '}';
     }
 }

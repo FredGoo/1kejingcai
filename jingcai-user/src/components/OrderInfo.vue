@@ -152,6 +152,7 @@
     mounted: function () {
       User.checkLogin()
       this.init()
+      console.log(returnCitySN)
     },
     methods: {
       // 初始化函数
@@ -241,9 +242,11 @@
             orderItemList: orderItemList
           })
           .then(response => {
-            console.log(response)
-            Toast('下单成功')
-            this.$router.push('/userOrders')
+            this.$axios
+              .post('/wechatPay/unifiedOrder')
+              .then(response => {
+                // this.$router.push('/userOrders')
+              })
           })
       },
       // 配送方式选择

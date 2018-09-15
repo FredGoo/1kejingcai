@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean createOrder(OrderModel orderModel) {
+    public String createOrder(OrderModel orderModel) {
         try {
             Date now = new Date();
             String orderNo = genOrderNo();
@@ -81,10 +81,14 @@ public class OrderServiceImpl implements OrderService {
             }
             int orderItemRes = this.orderItemsMapper.insertList(orderItemList);
 
-            return orderRes > 0 && orderItemRes > 0;
+            if (orderRes > 0 && orderItemRes > 0) {
+                return orderNo;
+            } else {
+                return "";
+            }
         } catch (Exception e) {
             logger.error("createOrder error", e);
-            return false;
+            return "";
         }
     }
 
@@ -156,6 +160,17 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             logger.error("listCount error", e);
             return 0;
+        }
+    }
+
+    @Override
+    public Order findOrderByOrderNo(String orderNo) {
+        try {
+            Order order = new Order();
+            order.setcOrderNo(orderNo);
+            return this.ordersMapper.selectOne(order);
+        } catch (Exception e) {
+            return null;
         }
     }
 
