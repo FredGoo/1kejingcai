@@ -253,6 +253,7 @@
               .then(response1 => {
                 // this.$router.push('/userOrders')
                 // 微信支付
+                this.unifiedOrder = response1.data.result
                 if (typeof WeixinJSBridge == "undefined") {
                   if (document.addEventListener) {
                     document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
