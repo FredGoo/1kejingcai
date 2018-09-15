@@ -145,7 +145,10 @@
         ],
 
         // 订单备注
-        tRemark: ''
+        tRemark: '',
+
+        // 支付信息
+        unifiedOrder: {}
 
       }
     },
@@ -243,11 +246,42 @@
           })
           .then(response => {
             this.$axios
-              .post('/wechatPay/unifiedOrder')
-              .then(response => {
+              .post('/wechatPay/unifiedOrder', {
+                "orderNo": response.data.result,
+                "ip": returnCitySN.cip
+              })
+              .then(response1 => {
                 // this.$router.push('/userOrders')
+                // 微信支付
+                if (typeof WeixinJSBridge == "undefined") {
+                  if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+                  } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+                    document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+                  }
+                } else {
+                  this.onBridgeReady()
+                }
+
               })
           })
+      },
+      onBridgeReady: function () {
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', {
+            "appId": this.unifiedOrder.appId,     //公众号名称，由商户传入
+            "timeStamp": this.unifiedOrder.timeStamp,         //时间戳，自1970年以来的秒数
+            "nonceStr": this.unifiedOrder.nonceStr, //随机串
+            "package": this.unifiedOrder.package,
+            "signType": "MD5",         //微信签名方式：
+            "paySign": this.unifiedOrder.paySign //微信签名
+          },
+          function (res) {
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+              alert(res)
+            }
+          });
       },
       // 配送方式选择
       onDeliveryChange(type) {

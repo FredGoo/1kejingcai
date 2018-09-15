@@ -1,6 +1,5 @@
 package gyqw.jingcai.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
@@ -9,14 +8,12 @@ import gyqw.jingcai.config.WxPayProperties;
 import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.User;
 import gyqw.jingcai.model.BaseModel;
-import gyqw.jingcai.model.WeChatPayOrderModel;
 import gyqw.jingcai.service.OrderService;
 import gyqw.jingcai.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.security.provider.MD5;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
@@ -65,52 +62,64 @@ public class WechatPayController {
      * 接口地址：https://api.mch.weixin.qq.com/pay/unifiedorder
      * 注意一些参数如appid、mchid等不用设置，方法内会自动从配置对象中获取到（前提是对应配置中已经设置）
      *
-     * @param orderNo 订单号
+     * @param reqMap 下单信息
      */
     @RequestMapping(value = "/unifiedOrder", method = RequestMethod.POST)
-    public BaseModel unifiedOrder(HttpSession httpSession, @RequestParam("orderNo") String orderNo,
-                                  @RequestParam("ip") String ip) throws WxPayException {
+    public BaseModel unifiedOrder(HttpSession httpSession, @RequestBody Map<String, String> reqMap) {
         BaseModel baseModel = new BaseModel();
 
-        // 获取用户信息
-        String userId = (String) httpSession.getAttribute("userId");
-        User user = this.userService.findUserById(Integer.valueOf(userId));
+        try {
+            // 获取用户信息
+            String userId = (String) httpSession.getAttribute("userId");
+            User user = this.userService.findUserById(Integer.valueOf(userId));
+            if (user == null) {
+                logger.info("unifiedOrder user is null");
+                baseModel.setStatus(false);
+                return baseModel;
+            }
 
-        // 获取订单信息
-        Order order = this.orderService.findOrderByOrderNo(orderNo);
-        if (order == null) {
+            // 获取订单信息
+            Order order = this.orderService.findOrderByOrderNo(reqMap.get("orderNo"));
+            if (order == null) {
+                logger.info("unifiedOrder order is null");
+                baseModel.setStatus(false);
+                return baseModel;
+            }
+
+            // 生成微信支付订单
+            WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+            orderRequest.setBody("焱食堂-餐费");
+            orderRequest.setOutTradeNo(order.getcOrderNo());
+            // 单位：分
+            orderRequest.setTotalFee(order.getnTotalAmount());
+            orderRequest.setOpenid(user.getcOpenId());
+            orderRequest.setSpbillCreateIp(reqMap.get("ip"));
+            orderRequest.setTradeType("JSAPI");
+            orderRequest.setNotifyUrl("http://jingcai.xiaobaitu.site/api/wechatPay/receiveNotify");
+            WxPayUnifiedOrderResult wxPayUnifiedOrderResult = this.wxService.unifiedOrder(orderRequest);
+
+            // 计算js sign
+            Date now = new Date();
+            String timeStamp = ("" + now.getTime()).substring(0, 10);
+            String paySign = "appId=" + this.properties.getAppId() + "&nonceStr=" + wxPayUnifiedOrderResult.getNonceStr()
+                    + "&package=prepay_id=" + wxPayUnifiedOrderResult.getPrepayId() + "&signType=MD5"
+                    + "&timeStamp=" + timeStamp + "&key=" + this.properties.getMchKey();
+            String sign = getMD5Str(paySign);
+
+            // 封装返回
+            Map<String, Object> map = new HashMap<>();
+            map.put("appId", this.properties.getAppId());
+            map.put("timeStamp", timeStamp);
+            map.put("nonceStr", wxPayUnifiedOrderResult.getNonceStr());
+            map.put("package", "prepay_id=" + wxPayUnifiedOrderResult.getPrepayId());
+            map.put("signType", "MD5");
+            map.put("paySign", sign);
+            baseModel.setResult(map);
+        } catch (Exception e) {
+            logger.error("unifiedOrder error", e);
             baseModel.setStatus(false);
-            return baseModel;
+            baseModel.setResult(e.getMessage());
         }
-
-        // 生成微信支付订单
-        WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
-        orderRequest.setBody("焱食堂-餐费");
-        orderRequest.setOutTradeNo(order.getcOrderNo());
-        // 单位：分
-        orderRequest.setTotalFee(order.getnTotalAmount());
-        orderRequest.setOpenid(user.getcOpenId());
-        orderRequest.setSpbillCreateIp(ip);
-        orderRequest.setTradeType("JSAPI");
-        orderRequest.setNotifyUrl("http://jingcai.xiaobaitu.site/api/wechatPay/receiveNotify");
-        WxPayUnifiedOrderResult wxPayUnifiedOrderResult = this.wxService.unifiedOrder(orderRequest);
-
-        // 计算js sign
-        Date now = new Date();
-        String paySign = "appId=" + this.properties.getAppId() + "&nonceStr=" + wxPayUnifiedOrderResult.getNonceStr()
-                + "&package=prepay_id=" + wxPayUnifiedOrderResult.getPrepayId() + "&signType=" + orderRequest.getSignType()
-                + "&timeStamp=" + now.getTime() + "&key=" + this.properties.getMchKey();
-        String sign = getMD5Str(paySign);
-
-        // 封装返回
-        Map<String, Object> map = new HashMap<>();
-        map.put("appId", this.properties.getAppId());
-        map.put("timeStamp", now.getTime());
-        map.put("nonceStr", wxPayUnifiedOrderResult.getNonceStr());
-        map.put("package", "prepay_id=" + wxPayUnifiedOrderResult.getPrepayId());
-        map.put("signType", orderRequest.getSignType());
-        map.put("paySign", sign);
-        baseModel.setResult(map);
 
         return baseModel;
     }

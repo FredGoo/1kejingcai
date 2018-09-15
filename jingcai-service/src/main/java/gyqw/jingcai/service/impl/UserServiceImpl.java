@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 
     private UsersMapper usersMapper;
 
-    @Autowired
+    @Autowired(required = false)
     public void setUsersMapper(UsersMapper usersMapper) {
         this.usersMapper = usersMapper;
     }
@@ -36,8 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(int id) {
-        // todo
-        return null;
+        return this.usersMapper.selectByPrimaryKey(id);
     }
 
     @Override
