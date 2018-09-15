@@ -70,8 +70,8 @@ public class WechatPayController {
 
         try {
             // 获取用户信息
-            String userId = (String) httpSession.getAttribute("userId");
-            User user = this.userService.findUserById(Integer.valueOf(userId));
+            Integer userId = (Integer) httpSession.getAttribute("userId");
+            User user = this.userService.findUserById(userId);
             if (user == null) {
                 logger.info("unifiedOrder user is null");
                 baseModel.setStatus(false);

@@ -37,10 +37,10 @@ public class OrderController {
     public BaseModel createOrder(@RequestBody OrderModel orderModel, HttpSession httpSession) {
         BaseModel baseModel = new BaseModel();
 
-        String userId = (String) httpSession.getAttribute("userId");
-        if (!StringUtils.isEmpty(userId)) {
+        Integer userId = (Integer) httpSession.getAttribute("userId");
+        if (userId != null) {
             User user = orderModel.getUser();
-            user.setnId(Integer.valueOf(userId));
+            user.setnId(userId);
             orderModel.setUser(user);
             baseModel.setResult(this.orderService.createOrder(orderModel));
             return baseModel;

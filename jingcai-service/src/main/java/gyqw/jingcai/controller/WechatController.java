@@ -81,7 +81,7 @@ public class WechatController {
     }
 
     @RequestMapping("/hackIn")
-    public String login(@RequestParam("hackLogin") String userId, HttpSession httpSession) {
+    public String login(@RequestParam("hackLogin") int userId, HttpSession httpSession) {
         if (!org.springframework.util.StringUtils.isEmpty(userId)) {
             httpSession.setAttribute("userId", userId);
         }
