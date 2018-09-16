@@ -1,3 +1,5 @@
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=GMT+8
 database.url=jdbc:mysql://0.0.0.0:3306/database?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
 database.username=
 database.password=

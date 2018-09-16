@@ -6,6 +6,7 @@ import gyqw.jingcai.filter.OrderFilter;
 import gyqw.jingcai.model.BaseModel;
 import gyqw.jingcai.model.OrderModel;
 import gyqw.jingcai.service.OrderService;
+import gyqw.jingcai.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,16 @@ public class OrderController {
     private Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     private OrderService orderService;
+    private UserService userService;
 
     @Autowired
     public void setOrderService(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -42,7 +49,13 @@ public class OrderController {
             User user = orderModel.getUser();
             user.setnId(userId);
             orderModel.setUser(user);
+
+            // 更新用户信息
+            this.userService.updateUser(user);
+
+            // 创建订单
             baseModel.setResult(this.orderService.createOrder(orderModel));
+
             return baseModel;
         } else {
             baseModel.setErrorCode("400");

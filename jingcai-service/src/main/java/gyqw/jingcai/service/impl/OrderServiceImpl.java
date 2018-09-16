@@ -2,6 +2,7 @@ package gyqw.jingcai.service.impl;
 
 import gyqw.jingcai.dao.OrderItemsMapper;
 import gyqw.jingcai.dao.OrdersMapper;
+import gyqw.jingcai.dao.UsersMapper;
 import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.OrderItem;
 import gyqw.jingcai.domain.User;
@@ -60,6 +61,8 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderModel.getOrder();
             List<OrderItem> orderItemList = orderModel.getOrderItemList();
             User user = orderModel.getUser();
+
+            // 添加用户信息
 
             // 添加订单
             order.setcOrderNo(orderNo);

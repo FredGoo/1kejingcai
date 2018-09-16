@@ -79,6 +79,7 @@
         show-toolbar
         title="选择自提时间"
         :columns="columns"
+        @change="onChange"
         @confirm="onConfirm"/>
     </van-actionsheet>
     <!-- ./ 配送时间 -->
@@ -90,12 +91,6 @@
   import {Toast} from 'vant';
   import LocalStorage from '../store/localStorage'
   import User from '../api/user'
-
-  const time = ['11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
-  const date = {
-    '今天': time,
-    '明天': time
-  }
 
   export default {
     data: function () {
@@ -131,29 +126,26 @@
         // 取货时间选择
         activeNames: ['0'],
         pickTimeShow: false,
+        // 选择时间
+        pickUpTime: {},
         pickTime: '',
-        columns: [
-          {
-            values: Object.keys(date),
-            className: 'column1'
-          },
-          {
-            values: date['今天'],
-            className: 'column2',
-            defaultIndex: 2
-          }
-        ],
+        columns: [],
 
         // 订单备注
         tRemark: '',
 
         // 支付信息
         unifiedOrder: {}
-
       }
     },
     mounted: function () {
-      User.checkLogin()
+      User.checkLogin().then(response => {
+        this.userContact = {
+          name: response.cName,
+          mobile: response.cMobile,
+          address: response.cAddress
+        }
+      })
       this.init()
     },
     methods: {
@@ -223,6 +215,15 @@
           cDeliver: this.pickTime,
           tRemark: this.tRemark
         }
+        let dateDeliver = this.pickTime.split(' ')
+        const now = new Date()
+        const monthStr = '0' + (now.getMonth() + 1)
+        if (dateDeliver[0] == '今天') {
+          dateDeliver = now.getFullYear() + '-' + monthStr.substr(monthStr.size - 2, monthStr) + '-' + now.getDate() + ' ' + dateDeliver[1] + ':00'
+        } else {
+          dateDeliver = now.getFullYear() + '-' + monthStr.substr(monthStr.size - 2, monthStr) + '-' + (now.getDate() + 1) + ' ' + dateDeliver[1] + ':00'
+        }
+        order.dDeliver = dateDeliver
 
         // 订单产品数据
         let orderItemList = []
@@ -285,11 +286,47 @@
       },
       // 时间选择
       onPickTime() {
+        const now = new Date()
+        const startHour = 11
+        const endHour = 20
+
+        let date = []
+
+        this.pickUpTime['明天'] = []
+        for (let i = startHour; i <= endHour; i++) {
+          this.pickUpTime['明天'].push(i + ':00')
+        }
+        // 判断营业时间
+        if (now.getHours() > endHour) {
+          date = ['明天']
+        } else {
+          date = ['今天', '明天']
+          this.pickUpTime['今天'] = []
+          for (let i = (now.getHours() + 1); i <= endHour; i++) {
+            this.pickUpTime['今天'].push(i + ':00')
+          }
+        }
+
+        this.columns = [{
+          values: date,
+          className: 'column1'
+        },
+          {
+            values: this.pickUpTime[date[0]],
+            className: 'column2',
+            defaultIndex: 2
+          }]
+
         this.pickTimeShow = true
       },
       onConfirm(value, index) {
         this.pickTime = value[0] + " " + value[1]
         this.pickTimeShow = false;
+      },
+      onChange(picker, values) {
+        console.log(values)
+        console.log(this.pickUpTime)
+        picker.setColumnValues(1, this.pickUpTime[values[0]]);
       }
     }
   }

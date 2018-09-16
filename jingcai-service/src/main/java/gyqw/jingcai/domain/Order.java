@@ -1,5 +1,8 @@
 package gyqw.jingcai.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
@@ -65,6 +68,7 @@ public class Order implements Serializable {
     @Column(name = "C_DELIVER")
     private String cDeliver;
 
+    @JsonFormat
     @Column(name = "D_DELIVER")
     private Date dDeliver;
 

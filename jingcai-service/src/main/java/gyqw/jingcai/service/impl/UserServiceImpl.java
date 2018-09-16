@@ -35,6 +35,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int updateUser(User user) {
+        try {
+            return this.usersMapper.updateByPrimaryKeySelective(user);
+        } catch (Exception e) {
+            logger.error("updateUser error", e);
+            return 0;
+        }
+    }
+
+    @Override
     public User findUserById(int id) {
         return this.usersMapper.selectByPrimaryKey(id);
     }

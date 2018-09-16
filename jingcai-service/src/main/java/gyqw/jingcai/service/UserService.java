@@ -15,6 +15,14 @@ public interface UserService {
     int createUser(User user);
 
     /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
+    int updateUser(User user);
+
+    /**
      * 根据id获取用户信息
      *
      * @param id 用户id
