@@ -44,6 +44,12 @@ public class Order implements Serializable {
     @Column(name = "N_TOTAL_AMOUNT")
     private Integer nTotalAmount;
 
+    /**
+     * 微信支付单号
+     */
+    @Column(name = "C_WECHAT_PAY_ORDER_NO")
+    private String cWechatPayOrderNo;
+
     @Column(name = "N_USER_ID")
     private Integer nUserId;
 
@@ -214,6 +220,24 @@ public class Order implements Serializable {
     }
 
     /**
+     * 获取微信支付单号
+     *
+     * @return C_WECHAT_PAY_ORDER_NO - 微信支付单号
+     */
+    public String getcWechatPayOrderNo() {
+        return cWechatPayOrderNo;
+    }
+
+    /**
+     * 设置微信支付单号
+     *
+     * @param cWechatPayOrderNo 微信支付单号
+     */
+    public void setcWechatPayOrderNo(String cWechatPayOrderNo) {
+        this.cWechatPayOrderNo = cWechatPayOrderNo == null ? null : cWechatPayOrderNo.trim();
+    }
+
+    /**
      * @return N_USER_ID
      */
     public Integer getnUserId() {
@@ -340,7 +364,7 @@ public class Order implements Serializable {
     /**
      * 获取备注
      *
-     * @return T_REMAKR - 备注
+     * @return T_REMARK - 备注
      */
     public String gettRemark() {
         return tRemark;
@@ -351,7 +375,7 @@ public class Order implements Serializable {
      *
      * @param tRemark 备注
      */
-    public void settRemakr(String tRemark) {
+    public void settRemark(String tRemark) {
         this.tRemark = tRemark == null ? null : tRemark.trim();
     }
 
@@ -369,6 +393,7 @@ public class Order implements Serializable {
         sb.append(", nServiceAmount=").append(nServiceAmount);
         sb.append(", nDiscountAmount=").append(nDiscountAmount);
         sb.append(", nTotalAmount=").append(nTotalAmount);
+        sb.append(", cWechatPayOrderNo=").append(cWechatPayOrderNo);
         sb.append(", nUserId=").append(nUserId);
         sb.append(", cCustName=").append(cCustName);
         sb.append(", cMobile=").append(cMobile);
@@ -377,7 +402,7 @@ public class Order implements Serializable {
         sb.append(", dCreate=").append(dCreate);
         sb.append(", dUpdate=").append(dUpdate);
         sb.append(", tCustAddress=").append(tCustAddress);
-        sb.append(", tRemakr=").append(tRemark);
+        sb.append(", tRemark=").append(tRemark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

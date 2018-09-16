@@ -1,5 +1,6 @@
 package gyqw.jingcai.controller;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayNotifyResponse;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
@@ -8,11 +9,13 @@ import gyqw.jingcai.config.WxPayProperties;
 import gyqw.jingcai.domain.Order;
 import gyqw.jingcai.domain.User;
 import gyqw.jingcai.model.BaseModel;
+import gyqw.jingcai.model.OrderStatusEnum;
 import gyqw.jingcai.service.OrderService;
 import gyqw.jingcai.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -127,15 +130,32 @@ public class WechatPayController {
         return baseModel;
     }
 
-    @RequestMapping(value = "/receiveNotify")
+    @RequestMapping(value = "/receiveNotify", produces = {MediaType.APPLICATION_XML_VALUE})
     public String receiveNotify(@RequestBody String xmlData) {
         try {
-            WxPayOrderNotifyResult res = this.wxService.parseOrderNotifyResult(xmlData);
-            logger.info(res.toString());
+            WxPayOrderNotifyResult wxPayOrderNotifyResult = this.wxService.parseOrderNotifyResult(xmlData);
+            logger.info(wxPayOrderNotifyResult.toString());
+
+            // 处理订单结果
+            Order order = this.orderService.findOrderByOrderNo(wxPayOrderNotifyResult.getOutTradeNo());
+            if (order.getnTotalAmount().equals(wxPayOrderNotifyResult.getTotalFee())) {
+                Order order1 = new Order();
+                order1.setnId(order.getnId());
+                order1.setcWechatPayOrderNo(wxPayOrderNotifyResult.getTransactionId());
+                order1.setnStatus(OrderStatusEnum.PAID.ordinal());
+                if (this.orderService.update(order1) > 0) {
+                    return WxPayNotifyResponse.success("OK");
+                } else {
+                    logger.error("receiveNotify update order error");
+                }
+            }
+
+            // 返回微信服务器结果
+            return WxPayNotifyResponse.fail("ERROR");
         } catch (Exception e) {
             logger.error("receiveNotify error", e);
+            return null;
         }
-        return "";
     }
 
     private String getMD5Str(String str) {

@@ -13,6 +13,7 @@
     <result column="N_SERVICE_AMOUNT" jdbcType="INTEGER" property="nServiceAmount" />
     <result column="N_DISCOUNT_AMOUNT" jdbcType="INTEGER" property="nDiscountAmount" />
     <result column="N_TOTAL_AMOUNT" jdbcType="INTEGER" property="nTotalAmount" />
+    <result column="C_WECHAT_PAY_ORDER_NO" jdbcType="VARCHAR" property="cWechatPayOrderNo" />
     <result column="N_USER_ID" jdbcType="INTEGER" property="nUserId" />
     <result column="C_CUST_NAME" jdbcType="VARCHAR" property="cCustName" />
     <result column="C_MOBILE" jdbcType="VARCHAR" property="cMobile" />
@@ -32,9 +33,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    N_ID, C_ORDER_NO, N_TYPE, N_STATUS, N_PRODUCTS_AMOUNT, N_SERVICE_AMOUNT, N_DISCOUNT_AMOUNT, 
-    N_TOTAL_AMOUNT, N_USER_ID, C_CUST_NAME, C_MOBILE, C_DELIVER, D_DELIVER, D_CREATE, 
-    D_UPDATE
+    N_ID, C_ORDER_NO, N_TYPE, N_STATUS, N_PRODUCTS_AMOUNT, N_SERVICE_AMOUNT, N_DISCOUNT_AMOUNT,
+    N_TOTAL_AMOUNT, C_WECHAT_PAY_ORDER_NO, N_USER_ID, C_CUST_NAME, C_MOBILE, C_DELIVER,
+    D_DELIVER, D_CREATE, D_UPDATE
   </sql>
   <sql id="Blob_Column_List">
     <!--
@@ -42,4 +43,5 @@
     -->
     T_CUST_ADDRESS, T_REMARK
   </sql>
+
 </mapper>
