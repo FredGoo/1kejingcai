@@ -11,6 +11,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,7 +20,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     private ConfigsMapper configsMapper;
 
-    @Autowired
+    @Autowired(required = false)
     public void setConfigsMapper(ConfigsMapper configsMapper) {
         this.configsMapper = configsMapper;
     }
@@ -37,6 +38,27 @@ public class ConfigServiceImpl implements ConfigService {
         } catch (Exception e) {
             logger.error("getConfigByCategory", e);
             return configList;
+        }
+    }
+
+    @Override
+    public int updateConfig(List<Config> configList) {
+        try {
+            Date now = new Date();
+            Integer res = 0;
+
+            for (Config config : configList) {
+                Condition condition = new Condition(Config.class);
+                condition.createCriteria()
+                        .andEqualTo("cCategory", config.getcCategory())
+                        .andEqualTo("cKey", config.getcKey());
+                config.setdUpdate(now);
+                res += this.configsMapper.updateByConditionSelective(config, condition);
+            }
+            return res;
+        } catch (Exception e) {
+            logger.error("updateConfig error", e);
+            return 0;
         }
     }
 }

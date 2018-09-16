@@ -73,6 +73,18 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/store-config',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'storeConfig',
+        component: () => import('@/views/storeConfig/index'),
+        meta: {title: '配置', icon: 'form'}
+      }
+    ]
+  },
 
   {path: '*', redirect: '/404', hidden: true}
 ]

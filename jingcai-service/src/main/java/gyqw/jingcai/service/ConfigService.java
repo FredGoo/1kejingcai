@@ -7,4 +7,6 @@ import java.util.List;
 public interface ConfigService {
 
     List<Config> getConfigByCategory(String category);
+
+    int updateConfig(List<Config> configList);
 }
