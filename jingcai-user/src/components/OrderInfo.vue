@@ -151,20 +151,6 @@
     methods: {
       // 初始化函数
       init() {
-        document.addEventListener('touchstart', function (event) {
-          if (event.touches.length > 1) {
-            event.preventDefault()
-          }
-        })
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-          let now = (new Date()).getTime()
-          if (now - lastTouchEnd <= 300) {
-            event.preventDefault()
-          }
-          lastTouchEnd = now;
-        }, false)
-
         this.$axios
           .get('/config/getConfigByCategories', {
             params: {
@@ -281,11 +267,10 @@
             "paySign": data.paySign //微信签名
           },
           function (res) {
-            if (res.err_msg == "get_brand_wcpay_request:ok") {
-              this.$router.push('/userOrders')
-            } else {
+            if (res.err_msg != "get_brand_wcpay_request:ok") {
               alert('支付失败')
             }
+            location.href = '/?1=1#/userOrders'
           });
       },
       // 配送方式选择

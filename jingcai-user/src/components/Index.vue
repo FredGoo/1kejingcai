@@ -265,7 +265,7 @@
           orderItemList: this.cart,
           totalPrice: this.totalPrice
         })
-        this.$router.push('/orderInfo')
+        location.href = '/?1=1#/orderInfo'
       }
     }
   }
