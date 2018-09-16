@@ -155,7 +155,6 @@
     mounted: function () {
       User.checkLogin()
       this.init()
-      console.log(returnCitySN)
     },
     methods: {
       // 初始化函数
@@ -251,13 +250,12 @@
                 "ip": returnCitySN.cip
               })
               .then(response1 => {
-                // this.$router.push('/userOrders')
                 // 微信支付
                 this.onBridgeReady(response1.data.result)
               })
           })
       },
-      onBridgeReady: function (data) {
+      onBridgeReady(data) {
         WeixinJSBridge.invoke(
           'getBrandWCPayRequest', {
             "appId": data.appId,     //公众号名称，由商户传入
@@ -269,7 +267,9 @@
           },
           function (res) {
             if (res.err_msg == "get_brand_wcpay_request:ok") {
-              alert(JSON.stringify(res))
+              this.$router.push('/userOrders')
+            } else {
+              alert('支付失败')
             }
           });
       },

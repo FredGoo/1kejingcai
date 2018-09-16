@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -28,14 +29,14 @@ public class UserController {
     }
 
     @RequestMapping("/info")
-    public BaseModel info(HttpSession httpSession) {
+    public BaseModel info(@RequestParam(value = "state", required = false) String state, HttpSession httpSession) {
         BaseModel baseModel = new BaseModel();
 
         // 检查登陆状态
         Object userId = httpSession.getAttribute("userId");
         if (StringUtils.isEmpty(userId)) {
             baseModel.setErrorCode("401");
-            baseModel.setErrorMessage(this.wxMpService.oauth2buildAuthorizationUrl(this.url, WxConsts.OAuth2Scope.SNSAPI_BASE, null));
+            baseModel.setErrorMessage(this.wxMpService.oauth2buildAuthorizationUrl(this.url, WxConsts.OAuth2Scope.SNSAPI_BASE, state));
         } else {
             baseModel.setResult(httpSession.getAttribute("userId"));
         }

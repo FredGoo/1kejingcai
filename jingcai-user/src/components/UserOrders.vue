@@ -24,7 +24,9 @@
               总计金额：&yen;{{ (item.order.nTotalAmount / 100).toFixed(2) }}
             </div>
             <div style="float: right;">
-              <van-button v-if="item.order.nStatus == 0" type="danger" size="small">去支付</van-button>
+              <van-button v-if="item.order.nStatus == 0" type="danger" size="small" @click="pay(item.order.cOrderNo)">
+                去支付
+              </van-button>
             </div>
             <div style="clear: both;"></div>
           </div>
@@ -67,7 +69,7 @@
       }
     },
     mounted: function () {
-      User.checkLogin()
+      User.checkLogin('userOrders')
       this.init()
     },
     methods: {
@@ -81,6 +83,36 @@
             }
           })
       },
+      // 支付订单
+      pay(orderNo) {
+        this.$axios
+          .post('/wechatPay/unifiedOrder', {
+            "orderNo": orderNo,
+            "ip": returnCitySN.cip
+          })
+          .then(response1 => {
+            // 微信支付
+            this.onBridgeReady(response1.data.result)
+          })
+      },
+      onBridgeReady(data) {
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', {
+            "appId": data.appId,     //公众号名称，由商户传入
+            "timeStamp": data.timeStamp,         //时间戳，自1970年以来的秒数
+            "nonceStr": data.nonceStr, //随机串
+            "package": data.package,
+            "signType": "MD5",         //微信签名方式：
+            "paySign": data.paySign //微信签名
+          },
+          function (res) {
+            if (res.err_msg == "get_brand_wcpay_request:ok") {
+              location.reload()
+            } else {
+              alert('支付失败')
+            }
+          });
+      }
     }
   }
 </script>

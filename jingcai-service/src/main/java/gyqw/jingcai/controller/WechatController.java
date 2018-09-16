@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +35,7 @@ import java.util.List;
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
 
-    @Value("${wechat.mall.home.url}")
+    @Value("${wechat.mall.home.url}#/")
     private String url;
 
     private WxMpService wxMpService;
@@ -56,8 +58,12 @@ public class WechatController {
     }
 
     @RequestMapping("/redirect")
-    public void redirect(@RequestParam("code") String code, HttpServletResponse response, HttpSession httpSession) {
+    public void redirect(@RequestParam("code") String code, HttpServletResponse response,
+                         @RequestParam("state") String state,
+                         HttpSession httpSession) {
         try {
+            response.sendRedirect(this.url + state);
+
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = this.wxMpService.oauth2getAccessToken(code);
             String openId = wxMpOAuth2AccessToken.getOpenId();
 
@@ -74,7 +80,7 @@ public class WechatController {
 
             // 用户自动登录
             httpSession.setAttribute("userId", user.getnId());
-            response.sendRedirect(this.url);
+            response.sendRedirect(this.url + state);
         } catch (Exception e) {
             logger.error("redirect error", e);
         }
