@@ -32,10 +32,12 @@
           v-model="userContact.mobile"
           label="电话："
           type="text"/>
-        <van-field
-          v-model="userContact.address"
-          label="详细地址："
-          type="text"/>
+        <van-cell title="详细地址" :label="customerFixedAddress">
+          <van-field
+            v-model="userContact.address"
+            type="text">
+          </van-field>
+        </van-cell>
       </van-row>
       <!-- ./ 配送信息 -->
 
@@ -114,6 +116,7 @@
         },
 
         // 收货人信息
+        customerFixedAddress: '',
         userContact: {
           name: '',
           mobile: '',
@@ -174,6 +177,8 @@
               this.storeName = this.config['store.info'].STORE_NAME
               // 店址
               this.storeAddress = this.config['store.info'].STORE_ADDRESS
+              // 客户固定地址
+              this.customerFixedAddress = this.config['store.info'].CUST_ADDRESS
             }
           })
       },
@@ -245,6 +250,12 @@
             orderItemList: orderItemList
           })
           .then(response => {
+            // 更新购物车
+            LocalStorage.save({
+              orderItemList: [],
+              totalPrice: 0
+            })
+
             this.$axios
               .post('/wechatPay/unifiedOrder', {
                 "orderNo": response.data.result,

@@ -253,6 +253,15 @@
         }
 
         this.totalPrice = totalPrice
+
+        this.updateCart()
+      },
+      // 更新购物车
+      updateCart() {
+        LocalStorage.save({
+          orderItemList: this.cart,
+          totalPrice: this.totalPrice
+        })
       },
       // 下单
       onSubmitOrder() {
@@ -261,10 +270,6 @@
           return
         }
 
-        LocalStorage.save({
-          orderItemList: this.cart,
-          totalPrice: this.totalPrice
-        })
         location.href = '/?1=1#/orderInfo'
       }
     }
