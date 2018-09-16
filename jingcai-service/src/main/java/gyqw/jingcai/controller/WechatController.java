@@ -62,8 +62,6 @@ public class WechatController {
                          @RequestParam("state") String state,
                          HttpSession httpSession) {
         try {
-            response.sendRedirect(this.url + state);
-
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = this.wxMpService.oauth2getAccessToken(code);
             String openId = wxMpOAuth2AccessToken.getOpenId();
 
