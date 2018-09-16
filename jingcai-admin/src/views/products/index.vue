@@ -49,6 +49,7 @@
         </el-form-item>
         <el-form-item label="图片地址" :label-width="formLabelWidth">
           <el-input v-model="form.tImageUrl" auto-complete="off"></el-input>
+          <div><a href="/admin/oss/" target="_blank">上传图片</a></div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
